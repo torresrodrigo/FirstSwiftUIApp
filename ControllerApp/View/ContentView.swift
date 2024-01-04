@@ -14,13 +14,12 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            Color("BackgroundColor")
-                .ignoresSafeArea()
+            BackgroundView(game: $game)
             VStack {
                 InstructionsView(game: $game)
                     .padding(30)
                 SliderView(sliderValue: $sliderValue)
-                .padding()
+                    .padding()
                 HitMeButton(alertIsVisible: $alertIsVisible, sliderValue: $sliderValue, game: $game)
             }
         }
@@ -67,6 +66,10 @@ struct HitMeButton: View {
                 LinearGradient(colors: [Color.white.opacity(0.3), Color.clear], startPoint: .top, endPoint: .bottom)
             }
         )
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(Color.white, lineWidth: 2)
+        )
         .foregroundColor(.white)
         .cornerRadius(21.0)
         .bold()
@@ -76,7 +79,7 @@ struct HitMeButton: View {
             isPresented: $alertIsVisible,
             actions: {
                 Button("Awesome") {
-                    print("Alert closed")
+                    game.startNewRound(points: game.points(sliderValue: Int(sliderValue)))
                 }
             },
             message: {
@@ -95,5 +98,6 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
         ContentView()
             .preferredColorScheme(.dark)
+            .previewDevice("Iphone 14")
     }
 }
